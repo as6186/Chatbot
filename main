@@ -1,0 +1,44 @@
+const axios = require('axios');
+
+// Rest of your code here
+;
+
+// Set up your OpenAI API key
+const apiKey = 'your_openai_api_key';
+
+// Function to generate responses using the OpenAI GPT-3 API
+async function generateResponse(query) {
+  const prompt = `I'm feeling stressed, can you help me with some advice on managing stress?`;
+
+  try {
+    const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+      prompt,
+      max_tokens: 50, // Adjust the length of the response as needed
+    }, {
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.status === 200) {
+      const chatbotResponse = response.data.choices[0].text;
+      return chatbotResponse;
+    } else {
+      return "I'm sorry, I couldn't generate a response at the moment.";
+    }
+  } catch (error) {
+    console.error(error);
+    return "An error occurred while generating a response.";
+  }
+}
+
+// Example usage in the chatbot
+const userInput = "I'm feeling stressed. Can you help me with some advice?";
+generateResponse(userInput)
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
